@@ -71,7 +71,7 @@ public class WordCounter {
                     int count = wordCounts.get(key);
                     // testing minimum number of occurances
                     if(count>=minCount){
-                        fileOutput.println(key + ": " + count);
+                        fileOutput.println(key + ", " + count);
                     }
                 }
 
