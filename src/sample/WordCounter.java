@@ -15,6 +15,7 @@ public class WordCounter {
     }
 
     public void parseFile(File file) throws IOException{
+
         System.out.println("Starting parsing the file:" + file.getAbsolutePath());
 
         if(file.isDirectory()){
@@ -53,6 +54,7 @@ public class WordCounter {
     }
 
     public void outputWordCount(int minCount, File output) throws IOException{
+
         System.out.println("Saving word counts to file:" + output.getAbsolutePath());
         System.out.println("Total words:" + wordCounts.keySet().size());
 
@@ -90,12 +92,14 @@ public class WordCounter {
         }
 
         File dataDir = new File(args[0]);
+        //File dataDir2 = new File(args[1]);
         File outFile = new File(args[1]);
 
         WordCounter wordCounter = new WordCounter();
         System.out.println("Hello");
         try{
             wordCounter.parseFile(dataDir);
+            //wordCounter.parseFile(dataDir2);
             wordCounter.outputWordCount(2, outFile);
         }catch(FileNotFoundException e){
             System.err.println("Invalid input dir: " + dataDir.getAbsolutePath());
