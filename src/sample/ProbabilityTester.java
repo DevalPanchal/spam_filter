@@ -18,11 +18,18 @@ public class ProbabilityTester {
     private static Map<String, Integer> hamWords;
     private static Map<String, Integer> spamWords;
     private static Map<String, Integer> temporaryMap;
+    private static Map<String, Double> hamProb;
+    private static Map<String, Double> spamProb;
+
+    private static int numHamFiles;
+    private static int numSpamFiles;
 
     public ProbabilityTester(){
         hamWords = new TreeMap<>();
         spamWords = new TreeMap<>();
         temporaryMap = new TreeMap<>();
+        hamProb = new TreeMap<>();
+        spamProb = new TreeMap<>();
     }
 
     /**
@@ -61,13 +68,34 @@ public class ProbabilityTester {
         temporaryMap.put(word, number);
     }
 
+    private static int countFiles(File folder){
+        return folder.listFiles().length;
+    }
+
+    /**
+     * This function finds the probability of ham or spam containing the word
+     * The probability is calculated by
+     * (number of ham/spam files containing word) / (number of ham/spam files)
+     * @param word
+     */
+    private static void probabilityContains(String word){
+        double probHam = (double) hamWords.get(word) / (double) numHamFiles;
+        double probSpam = (double) spamWords.get(word) / (double) numSpamFiles;
+        hamProb.put(word, probHam);
+        spamProb.put(word, probSpam);
+    }
+
     public static void main(String[] args){
 
         WordCounter wc = new WordCounter();
         try {
+            String testPath = "..\\..\\data\\test";
+
             // Open ham and spam outputs
             File ham = new File("HamOutput.csv");
             File spam = new File("SpamOutput.csv");
+            File hamFolder = new File(testPath+"ham");
+            File spamFolder = new File(testPath+"spam");
 
             // Parse the csv files and copy the contents into ham and spam maps
             parseCSV(ham);
@@ -75,15 +103,10 @@ public class ProbabilityTester {
             parseCSV(spam);
             spamWords.putAll(temporaryMap);
 
-            /**
-            // parse ham and put all words into hamWords
-            wc.parseFile(ham);
-            hamWords.putAll(wc.getWordCounts());
+            // Count the files in each test folder
+            numHamFiles = countFiles(hamFolder);
+            numSpamFiles = countFiles(spamFolder);
 
-            // parse spam and put all words into spamWords
-            wc.parseFile(spam);
-            spamWords.putAll(wc.getWordCounts());
-             */
         } catch(FileNotFoundException e){
             System.err.println("Cannot find file");
             e.printStackTrace();
