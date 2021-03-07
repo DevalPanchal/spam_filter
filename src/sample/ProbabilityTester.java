@@ -70,7 +70,9 @@ public class ProbabilityTester {
     }
 
     private static int countFiles(File folder){
-        return folder.listFiles().length;
+        File[] size = folder.listFiles();
+        System.out.printf("files in folder: %d\n", size.length);
+        return size.length;
     }
 
     /**
@@ -92,24 +94,31 @@ public class ProbabilityTester {
     }
 
     public static void main(String[] args){
-
+        System.out.println("Starting Probability Tester");
         WordCounter wc = new WordCounter();
         try {
-            String testPath = "..\\..\\data\\test";
-
+            // Main folder is spam_filter
+            String testPath = ".\\data\\test\\";
+            String filePath = ".\\src\\sample\\";
+            System.out.println("Opening files");
             // Open ham and spam outputs
-            File ham = new File("HamOutput.csv");
-            File spam = new File("SpamOutput.csv");
+            File ham = new File(filePath+"HamOutput.csv");
+            File spam = new File(filePath+"SpamOutput.csv");
             File hamFolder = new File(testPath+"ham");
             File spamFolder = new File(testPath+"spam");
 
             // Parse the csv files and copy the contents into ham and spam maps
+            System.out.println("Parsing ham");
             parseCSV(ham);
-            hamWords.putAll(temporaryMap);
+            System.out.println("Copying ham");
+            hamWords = temporaryMap;
+            System.out.println("Parsing spam");
             parseCSV(spam);
-            spamWords.putAll(temporaryMap);
+            System.out.println("Copying spam");
+            spamWords = temporaryMap;
 
             // Count the files in each test folder
+            System.out.println("Counting");
             numHamFiles = countFiles(hamFolder);
             numSpamFiles = countFiles(spamFolder);
 
