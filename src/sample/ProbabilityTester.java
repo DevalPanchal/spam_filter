@@ -20,7 +20,7 @@ public class ProbabilityTester {
     private static Map<String, Integer> temporaryMap;
     private static Map<String, Double> hamProb;
     private static Map<String, Double> spamProb;
-
+    private static Map<String, Double> probabilitySW;
     private static int numHamFiles;
     private static int numSpamFiles;
 
@@ -30,6 +30,7 @@ public class ProbabilityTester {
         temporaryMap = new TreeMap<>();
         hamProb = new TreeMap<>();
         spamProb = new TreeMap<>();
+        probabilitySW = new TreeMap<>();
     }
 
     /**
@@ -83,6 +84,11 @@ public class ProbabilityTester {
         double probSpam = (double) spamWords.get(word) / (double) numSpamFiles;
         hamProb.put(word, probHam);
         spamProb.put(word, probSpam);
+    }
+
+    private static void probability(String word){
+        double probSW = spamProb.get(word) / (spamProb.get(word) + hamProb.get(word));
+        probabilitySW.put(word, probSW);
     }
 
     public static void main(String[] args){
