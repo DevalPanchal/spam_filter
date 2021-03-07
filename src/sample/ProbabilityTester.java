@@ -3,7 +3,7 @@ package sample;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.lang.Math;
 import java.util.*;
 
 
@@ -21,6 +21,7 @@ public class ProbabilityTester {
     private static Map<String, Double> hamProb;
     private static Map<String, Double> spamProb;
     private static Map<String, Double> probabilitySW;
+    private static List<String> wordList;
     private static int numHamFiles;
     private static int numSpamFiles;
 
@@ -50,6 +51,7 @@ public class ProbabilityTester {
         while (scanner.hasNext()){
             String  token = scanner.next();
             if (WordCounter.isValidWord(token)){
+                wordList.add(token);
                 temp = token;
             }
             if (isNumber(token)){
@@ -88,10 +90,24 @@ public class ProbabilityTester {
         spamProb.put(word, probSpam);
     }
 
-    private static void probability(String word){
+    private static double probabilityMap(String word){
+        probabilityContains(word);
         double probSW = spamProb.get(word) / (spamProb.get(word) + hamProb.get(word));
         probabilitySW.put(word, probSW);
+        return probSW;
     }
+
+    private static void summation (int N){
+        Double result = 0.0;
+//        for (Map.Entry<String, Double> word : probabilitySW.entrySet()){
+//            result += Math.log(1-word.getValue())-Math.log(word.getValue());
+//        }
+        for (int i = 0; i < N; i++){
+            result += Math.log(1-probabilityMap(wordList.get(i)))-Math.log(probabilityMap(wordList.get(i)));
+        }
+
+    }
+
 
     public static void main(String[] args){
         System.out.println("Starting Probability Tester");
