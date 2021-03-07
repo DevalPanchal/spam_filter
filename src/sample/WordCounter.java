@@ -14,6 +14,10 @@ public class WordCounter {
         wordCounts = new TreeMap<>();
     }
 
+    public Map<String, Integer> getWordCounts() {
+        return wordCounts;
+    }
+
     public void parseFile(File file) throws IOException{
 
         System.out.println("Starting parsing the file:" + file.getAbsolutePath());
@@ -37,7 +41,7 @@ public class WordCounter {
 
     }
 
-    private boolean isValidWord(String word){
+    public static boolean isValidWord(String word){
         String allLetters = "^[a-zA-Z]+$";
         // returns true if the word is composed by only letters otherwise returns false;
         return word.matches(allLetters);
