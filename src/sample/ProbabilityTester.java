@@ -21,7 +21,7 @@ public class ProbabilityTester {
     private static Map<String, Double> hamProb;
     private static Map<String, Double> spamProb;
     private static Map<String, Double> probabilitySW;
-    private static List<String> wordList;
+    private static List<String> wordList = new ArrayList<>();
     private static int numHamFiles;
     private static int numSpamFiles;
 
@@ -49,9 +49,11 @@ public class ProbabilityTester {
         scanner.useDelimiter(",");
         // scanning token by token
         while (scanner.hasNext()){
-            String  token = scanner.next();
+            String token = scanner.next();
             if (WordCounter.isValidWord(token)){
-                wordList.add(token);
+                if (!wordList.contains(token)){
+                    wordList.add(token);
+                }
                 temp = token;
             }
             if (isNumber(token)){
@@ -84,8 +86,22 @@ public class ProbabilityTester {
      * @param word
      */
     private static void probabilityContains(String word){
-        double probHam = (double) hamWords.get(word) / (double) numHamFiles;
-        double probSpam = (double) spamWords.get(word) / (double) numSpamFiles;
+        double probHam = 0.0;
+        double probSpam = 0.0;
+
+        if (hamWords.containsKey(word) && spamWords.containsKey(word)){
+            System.out.println("Option both");
+            probHam = (double) hamWords.get(word) / (double) numHamFiles;
+            probSpam = (double) spamWords.get(word) / (double) numSpamFiles;
+        } else if (!hamWords.containsKey(word)){
+            System.out.println("Option ham");
+            probSpam = 100.0;
+            probHam = 0.0;
+        } else if (!spamWords.containsKey(word)) {
+            System.out.println("Option spam");
+            probSpam = 0.0;
+            probHam = 100.0;
+        }
         hamProb.put(word, probHam);
         spamProb.put(word, probSpam);
     }
@@ -97,15 +113,16 @@ public class ProbabilityTester {
         return probSW;
     }
 
-    private static void summation (int N){
-        Double result = 0.0;
+    private static double summation (int N){
+        double result = 0.0;
 //        for (Map.Entry<String, Double> word : probabilitySW.entrySet()){
 //            result += Math.log(1-word.getValue())-Math.log(word.getValue());
 //        }
         for (int i = 0; i < N; i++){
-            result += Math.log(1-probabilityMap(wordList.get(i)))-Math.log(probabilityMap(wordList.get(i)));
+            double wordProb = probabilityMap(wordList.get(i));
+            result += Math.log(1-wordProb)-Math.log(wordProb);
         }
-
+        return 1 / (1 + Math.exp(result));
     }
 
 
@@ -144,5 +161,8 @@ public class ProbabilityTester {
         }catch(IOException e){
             e.printStackTrace();
         }
+
+        int n = wordList.size();
+        System.out.println(summation(n));
     }
 }
