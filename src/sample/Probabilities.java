@@ -6,7 +6,7 @@ import java.util.*;
 public class Probabilities {
 
     private  Map<String, Integer> trainHamFreq;
-    private  Map<String, Double> trainSpamFreq;
+    private  Map<String, Integer> trainSpamFreq;
     private  Map<String, Integer> temporaryMap;
     private  Map<String, Double> spamProb;
     private  Map<String, Double> hamProb;
@@ -29,22 +29,6 @@ public class Probabilities {
 
     public void parseFile(File file) throws IOException {
         System.out.println("Starting parsing the file: " + file.getAbsolutePath());
-        File[] content = file.listFiles();
-        if (file.isDirectory()) {
-
-            for (File current: content) {
-                parseFile(current);
-            }
-        } else {
-            Scanner scan = new Scanner(file);
-            while(scan.hasNext()) {
-                String token = scan.next();
-                if (isValidWord(token)) {
-                    double probability = (double) trainHamFreq.get(token) / (double) content.length;
-                    hamProb.put(token, probability);
-                }
-            }
-        }
 
 //        String line = "";
 //

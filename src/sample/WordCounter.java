@@ -10,30 +10,33 @@ public class WordCounter {
 
     private Map<String, Integer> wordCounts;
 
-    private Map<String, Double> trainHamFreq;
-    private Map<String, Double> trainSpamFreq;
+    private Map<String, Integer> trainHamFreq;
+    private Map<String, Integer> trainSpamFreq;
+    private Map<String, Double> hamProbability;
 
     public WordCounter(){
         wordCounts = new TreeMap<>();
         trainHamFreq = new TreeMap<>();
         trainSpamFreq = new TreeMap<>();
+        hamProbability = new TreeMap<>();
     }
 
     public Map<String, Integer> getWordCounts() {
         return wordCounts;
     }
 
-    public Map<String, Double> getTrainHamFreq() {
+    public Map<String, Integer> getTrainHamFreq() {
         return trainHamFreq;
     }
 
-    public Map<String, Double> getTrainSpamFreq() {
+    public Map<String, Integer> getTrainSpamFreq() {
         return trainSpamFreq;
     }
 
     public void parseFile(File file) throws IOException{
-        System.out.println("Starting parsing the file:" + file.getAbsolutePath());
+        //System.out.println("Starting parsing the file:" + file.getAbsolutePath());
         File[] content = file.listFiles();
+        String filePathName = file.getPath();
         if(file.isDirectory()){
             //parse each file inside the directory
             System.out.println(content.length);
@@ -46,7 +49,11 @@ public class WordCounter {
             while (scanner.hasNext()){
                 String  token = scanner.next();
                 if (isValidWord(token)) {
-                    countWord(token);
+                    if (filePathName.contains("ham")) {
+                        hamFrequency(token);
+                    } else if (filePathName.contains("spam")) {
+                        spamFrequency(token);
+                    }
 
                 }
             }
@@ -67,6 +74,26 @@ public class WordCounter {
             wordCounts.put(word, 1);
         }
     }
+
+    public void hamFrequency(String word) {
+        if (trainHamFreq.containsKey(word)) {
+            int previous = trainHamFreq.get(word);
+            trainHamFreq.put(word, previous+1);
+        } else {
+            trainHamFreq.put(word, 1);
+        }
+    }
+
+    public void spamFrequency(String word) {
+        if (trainSpamFreq.containsKey(word)) {
+            int previous = trainSpamFreq.get(word);
+            trainSpamFreq.put(word, previous+1);
+        } else {
+            trainSpamFreq.put(word, 1);
+        }
+    }
+
+
 
     public void outputWordCount(int minCount, File output) throws IOException{
         System.out.println("Saving word counts to file:" + output.getAbsolutePath());
@@ -96,12 +123,10 @@ public class WordCounter {
     }
 
 
-
     //main method
     public static void main(String[] args) {
-
-        if(args.length < 2){
-            System.err.println("Usage: java WordCounter <inputDir> <outfile>");
+        if(args.length < 1){
+            System.err.println("Usage: java WordCounter <inputDir>");
             System.exit(0);
         }
 
@@ -113,6 +138,11 @@ public class WordCounter {
         System.out.println("Hello");
         try{
             wordCounter.parseFile(dataDir);
+
+            //System.out.println("Testing if this works: " + wordCounter.hamProbability);
+
+            System.out.println("HOPING: " + wordCounter.trainHamFreq);
+            System.out.println("REALLY AM HOPING: " + wordCounter.trainSpamFreq);
             //wordCounter.parseFile(dataDir2);
             //wordCounter.outputWordCount(2, outFile);
         }catch(FileNotFoundException e){
