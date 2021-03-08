@@ -17,7 +17,7 @@ public class ProbabilityTester {
 
     private static Map<String, Integer> hamWords;
     private static Map<String, Integer> spamWords;
-    private static Map<String, Integer> temporaryMap;
+    public static Map<String, Integer> temporaryMap;
     private static Map<String, Double> hamProb;
     private static Map<String, Double> spamProb;
     private static Map<String, Double> probabilitySW;
@@ -46,37 +46,42 @@ public class ProbabilityTester {
         String temp = "";
         int number = 0;
         Scanner scanner = new Scanner(file);
-        scanner.useDelimiter(",");
+//        scanner.useDelimiter(",");
         // scanning token by token
         while (scanner.hasNext()){
-            String token = scanner.next();
-            if (WordCounter.isValidWord(token)){
-                if (!wordList.contains(token)){
-                    wordList.add(token);
+            String token = scanner.nextLine();
+//            System.out.println(token.split(", ")[0]);
+//            System.out.println(token.split(", ")[1]);
+            if (WordCounter.isValidWord(token.split(", ")[0])){
+                if (!wordList.contains(token.split(", ")[0])){
+                    wordList.add(token.split(", ")[0]);
                 }
-                temp = token;
+                temp = token.split(", ")[0];
             }
-            if (isNumber(token)){
-                number = Integer.parseInt(token);
-                addWord(temp, number);
-            }
+            number = Integer.parseInt(token.split(", ")[1]);
+//            System.out.println(temp);
+//            System.out.println(number);
+            addWord(temp, number);
+
         }
     }
 
-    private static boolean isNumber (String input){
-        String allNumbers = "^[1-9]+$";
-        // returns true if the word is composed by only letters otherwise returns false;
-        return input.matches(allNumbers);
-    }
+//    private static boolean isNumber (String input){
+//        String allNumbers = "^[1-9]+$";
+//        // returns true if the word is composed by only letters otherwise returns false;
+//        return input.matches(allNumbers);
+//    }
 
     private static void addWord(String word, int number){
+        System.out.printf("String %s, Integer %d\n", word, number);
         temporaryMap.put(word, number);
     }
 
     private static int countFiles(File folder){
-        File[] size = folder.listFiles();
-        System.out.printf("files in folder: %d\n", size.length);
-        return size.length;
+        File[] a = folder.listFiles();
+//        System.out.printf("files in folder: %d\n", size.length);
+        assert a != null;
+        return a.length;
     }
 
     /**
@@ -144,11 +149,13 @@ public class ProbabilityTester {
             System.out.println("Parsing ham");
             parseCSV(ham);
             System.out.println("Copying ham");
-            hamWords = temporaryMap;
+            System.out.println(temporaryMap);
+            hamWords.putAll(temporaryMap);
+            temporaryMap.clear();
             System.out.println("Parsing spam");
             parseCSV(spam);
             System.out.println("Copying spam");
-            spamWords = temporaryMap;
+            spamWords.putAll(temporaryMap);
 
             // Count the files in each test folder
             System.out.println("Counting");
