@@ -6,10 +6,10 @@ import java.util.*;
 public class Probabilities {
 
     private  Map<String, Integer> trainHamFreq;
-    private  Map<String, Integer> trainSpamFreq;
+    private  Map<String, Double> trainSpamFreq;
     private  Map<String, Integer> temporaryMap;
-    private  Map<String, Double> hamProb;
     private  Map<String, Double> spamProb;
+    private  Map<String, Double> hamProb;
     private  Map<String, Double> probabilitySW;
     private  int numHamFiles;
     private  int numSpamFiles;
@@ -29,39 +29,44 @@ public class Probabilities {
 
     public void parseFile(File file) throws IOException {
         System.out.println("Starting parsing the file: " + file.getAbsolutePath());
-        String line = "";
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        File[] content = file.listFiles();
+        if (file.isDirectory()) {
 
-            while((line = reader.readLine()) != null) {
-                // parsing the email
-                String[] email = line.split(",");
-                // the number of occurences of the word
-                int number = Integer.parseInt(email[1].trim());
-                //System.out.println("Ham [email: " + email[0] + ", occurences: " + email[1] + "]");
-                // Put the lines read in a number
-                temporaryMap.put(email[0],  number);
-
-                double probabilityHam = (double) temporaryMap.get(email[0]) / (double) 2501;
-                hamProb.put(email[0], probabilityHam);
+            for (File current: content) {
+                parseFile(current);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            Scanner scan = new Scanner(file);
+            while(scan.hasNext()) {
+                String token = scan.next();
+                if (isValidWord(token)) {
+                    double probability = (double) trainHamFreq.get(token) / (double) content.length;
+                    hamProb.put(token, probability);
+                }
+            }
         }
-//        String temp = "";
-//        int number = 0;
-//        Scanner scan = new Scanner(file);
-//        scan.useDelimiter(",");
-//        while(scan.hasNext()) {
-//            String token = scan.next();
-//            if (isValidWord(token)) {
-//                temp = token;
+
+//        String line = "";
+//
+//        try {
+//            BufferedReader reader = new BufferedReader(new FileReader(file));
+//
+//            while((line = reader.readLine()) != null) {
+//                // parsing the email
+//                String[] email = line.split(",");
+//                // the number of occurences of the word
+//                int number = Integer.parseInt(email[1].trim());
+//                //System.out.println("Ham [email: " + email[0] + ", occurences: " + email[1] + "]");
+//                // Put the lines read in a number
+//                temporaryMap.put(email[0],  number);
+//
+//                double probabilityHam = (double) temporaryMap.get(email[0]) / (double) 2501;
+//                hamProb.put(email[0], probabilityHam);
 //            }
-//            if (isNumber(token)) {
-//                number = Integer.parseInt(token);
-//                addWord(temp, number);
-//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
+
     }
 
     public boolean isValidWord(String word){
@@ -123,7 +128,7 @@ public class Probabilities {
             probabilities.parseFile(hamFile1);
             //System.out.println("Display Temporary Map: " + probabilities.temporaryMap);
 
-            System.out.println("Displaying probability: " + probabilities.hamProb);
+            //System.out.println("Displaying probability: " + probabilities.hamProb);
 
             System.out.println("Counting...");
             probabilities.numHamFiles = probabilities.countFiles(hamFolder);

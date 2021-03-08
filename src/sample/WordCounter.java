@@ -10,22 +10,34 @@ public class WordCounter {
 
     private Map<String, Integer> wordCounts;
 
+    private Map<String, Double> trainHamFreq;
+    private Map<String, Double> trainSpamFreq;
+
     public WordCounter(){
         wordCounts = new TreeMap<>();
+        trainHamFreq = new TreeMap<>();
+        trainSpamFreq = new TreeMap<>();
     }
 
     public Map<String, Integer> getWordCounts() {
         return wordCounts;
     }
 
+    public Map<String, Double> getTrainHamFreq() {
+        return trainHamFreq;
+    }
+
+    public Map<String, Double> getTrainSpamFreq() {
+        return trainSpamFreq;
+    }
+
     public void parseFile(File file) throws IOException{
-
         System.out.println("Starting parsing the file:" + file.getAbsolutePath());
-
+        File[] content = file.listFiles();
         if(file.isDirectory()){
             //parse each file inside the directory
-            File[] content = file.listFiles();
-            for(File current: content){
+            System.out.println(content.length);
+            for(File current: content) {
                 parseFile(current);
             }
         }else{
@@ -33,15 +45,15 @@ public class WordCounter {
             // scanning token by token
             while (scanner.hasNext()){
                 String  token = scanner.next();
-                if (isValidWord(token)){
+                if (isValidWord(token)) {
                     countWord(token);
+
                 }
             }
         }
-
     }
 
-    public static boolean isValidWord(String word){
+    public static boolean isValidWord(String word) {
         String allLetters = "^[a-zA-Z]+$";
         // returns true if the word is composed by only letters otherwise returns false;
         return word.matches(allLetters);
@@ -57,7 +69,6 @@ public class WordCounter {
     }
 
     public void outputWordCount(int minCount, File output) throws IOException{
-
         System.out.println("Saving word counts to file:" + output.getAbsolutePath());
         System.out.println("Total words:" + wordCounts.keySet().size());
 
@@ -84,6 +95,8 @@ public class WordCounter {
         }
     }
 
+
+
     //main method
     public static void main(String[] args) {
 
@@ -94,14 +107,14 @@ public class WordCounter {
 
         File dataDir = new File(args[0]);
         //File dataDir2 = new File(args[1]);
-        File outFile = new File(args[1]);
+        //File outFile = new File(args[1]);
 
         WordCounter wordCounter = new WordCounter();
         System.out.println("Hello");
         try{
             wordCounter.parseFile(dataDir);
             //wordCounter.parseFile(dataDir2);
-            wordCounter.outputWordCount(2, outFile);
+            //wordCounter.outputWordCount(2, outFile);
         }catch(FileNotFoundException e){
             System.err.println("Invalid input dir: " + dataDir.getAbsolutePath());
             e.printStackTrace();
