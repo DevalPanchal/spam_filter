@@ -129,9 +129,16 @@ public class ProbabilityTester {
 //        }
         for (int i = 1; i < N; i++){
             double wordProb = probabilityMap(wordList.get(i));
+//            System.out.println(wordProb);
+            if (wordProb == 1){
+                wordProb -= Math.pow(10,-16);
+            } else if (wordProb == 0) {
+                wordProb = Math.pow(10,-16);
+            }
             result += Math.log(1-wordProb)-Math.log(wordProb);
+            System.out.println(result);
         }
-        System.out.println(result);
+//        System.out.println(result);
         return 1 / (1 + Math.pow(Math.E, result));
     }
 
@@ -174,7 +181,6 @@ public class ProbabilityTester {
         }catch(IOException e){
             e.printStackTrace();
         }
-
         System.out.println("ProbabilitySW");
         System.out.println(probabilitySW);
         System.out.println("Calculating summation");
