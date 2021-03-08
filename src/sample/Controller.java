@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 
 import java.io.File;
@@ -21,6 +22,12 @@ public class Controller {
     private TableColumn spamProbabilityColumn;
     @FXML
     private Button trainDataBtn;
+    @FXML
+    private Button testDataBtn;
+    @FXML
+    private TextField trainDataPath;
+    @FXML
+    private TextField testDataPath;
 
     WordCounter wordCounter = new WordCounter();
 
@@ -28,10 +35,9 @@ public class Controller {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File("."));
         File mainDirectory = directoryChooser.showDialog(null);
-
         if (mainDirectory != null) {
             String path = mainDirectory.getAbsolutePath();
-            trainDataBtn.setText(path);
+            trainDataPath.setText(path);
 
             wordCounter.parseTrainingFolder(mainDirectory);
             wordCounter.probabiltyFileIsSpam();
@@ -39,6 +45,21 @@ public class Controller {
             System.out.println(wordCounter.probabilitySpamWords);
         } else {
             System.out.println("Directory not valid!");
+        }
+    }
+
+    public void TestData(ActionEvent e) throws IOException {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setInitialDirectory(new File("."));
+        File mainDirectory = directoryChooser.showDialog(null);
+
+        if (mainDirectory != null) {
+            String path = mainDirectory.getAbsolutePath();
+            testDataPath.setText(path);
+
+            wordCounter.parseTestingFolder(mainDirectory);
+
+
         }
     }
 }

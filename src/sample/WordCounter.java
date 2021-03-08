@@ -76,6 +76,40 @@ public class WordCounter {
         }
     }
 
+    public void parseTestingFolder(File file) throws IOException {
+        String fileName = file.getPath();
+        if (file.isDirectory()) {
+            File[] content = file.listFiles();
+            for (File current: content) {
+                parseTestingFolder(file);
+            }
+        } else {
+            double probabilitySpam = 0.0;
+            try {
+                probabilitySpam = probabilitySpamFile(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public double probabilitySpamFile(File file) throws FileNotFoundException {
+        double probability = 0.0;
+        double N = 0.0;
+        double threshold = 0.5;
+
+        Scanner scan = new Scanner(file);
+        while(scan.hasNext()) {
+            String token = scan.next();
+            if (isValidWord(token)) {
+                if (probabilitySpamWords.containsKey(token)) {
+                    N += Math.log(1 - probabilitySpamWords.get(token) - Math.log(probabilitySpamWords.get(token)));
+                }
+            }
+        }
+        probability = 1 / (1 + Math.pow(Math.E, N));
+        return probability;
+    }
 
     public void hamFrequency(File file) throws IOException {
         File[] content = file.listFiles();

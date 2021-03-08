@@ -5,10 +5,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TextField?>
 <GridPane fx:controller="sample.Controller"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
 
-    <Button fx:id="trainDataBtn" id="trainDataBtn" onAction="#TrainData" GridPane.rowIndex="1" GridPane.columnIndex="1" text="Select Training Path"></Button>
+    <Button fx:id="trainDataBtn" id="trainDataBtn" onAction="#TrainData" GridPane.rowIndex="1" GridPane.columnIndex="0" text="Select Training Path"></Button>
+    <TextField fx:id="trainDataPath" id="trainDataPath" GridPane.rowIndex="1" GridPane.columnIndex="1"></TextField>
+    <Button fx:id="testDataBtn" id="testDataBtn" onAction="#TestData" GridPane.rowIndex="2" GridPane.columnIndex="0" text="Select Testing Path"></Button>
+    <TextField fx:id="testDataPath" id="testDataPath" GridPane.rowIndex="2" GridPane.columnIndex="1"></TextField>
     <TableView fx:id="tableView" GridPane.columnIndex="0" GridPane.rowIndex="0">
         <columns>
             <TableColumn fx:id="fileColumn" text="File"></TableColumn>
