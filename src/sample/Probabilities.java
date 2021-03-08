@@ -1,24 +1,22 @@
 package sample;
 
 import java.io.*;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Probabilities {
 
-    private static Map<String, Integer> hamWords;
-    private static Map<String, Integer> spamWords;
-    private static Map<String, Integer> temporaryMap;
-    private static Map<String, Double> hamProb;
-    private static Map<String, Double> spamProb;
-    private static Map<String, Double> probabilitySW;
-    private static int numHamFiles;
-    private static int numSpamFiles;
+    private  Map<String, Integer> trainHamFreq;
+    private  Map<String, Integer> trainSpamFreq;
+    private  Map<String, Integer> temporaryMap;
+    private  Map<String, Double> hamProb;
+    private  Map<String, Double> spamProb;
+    private  Map<String, Double> probabilitySW;
+    private  int numHamFiles;
+    private  int numSpamFiles;
 
     public Probabilities() {
-        hamWords = new TreeMap<>();
-        spamWords = new TreeMap<>();
+        trainHamFreq = new TreeMap<>();
+        trainSpamFreq = new TreeMap<>();
         temporaryMap = new TreeMap<>();
         hamProb = new TreeMap<>();
         spamProb = new TreeMap<>();
@@ -31,53 +29,82 @@ public class Probabilities {
 
     public void parseFile(File file) throws IOException {
         System.out.println("Starting parsing the file: " + file.getAbsolutePath());
-        String temp = "";
-        int number = 0;
-        Scanner scan = new Scanner(file);
-        scan.useDelimiter(",");
-        while(scan.hasNext()) {
-            String token = scan.next();
-            if (isValidWord(token)) {
-                temp = token;
+        String line = "";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            while((line = reader.readLine()) != null) {
+                // parsing the email
+                String[] email = line.split(",");
+                // the number of occurences of the word
+                int number = Integer.parseInt(email[1].trim());
+                //System.out.println("Ham [email: " + email[0] + ", occurences: " + email[1] + "]");
+                // Put the lines read in a number
+                temporaryMap.put(email[0],  number);
+
+                double probabilityHam = (double) temporaryMap.get(email[0]) / (double) 2501;
+                hamProb.put(email[0], probabilityHam);
             }
-            if (isNumber(token)) {
-                number = Integer.parseInt(token);
-                addWord(temp, number);
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+//        String temp = "";
+//        int number = 0;
+//        Scanner scan = new Scanner(file);
+//        scan.useDelimiter(",");
+//        while(scan.hasNext()) {
+//            String token = scan.next();
+//            if (isValidWord(token)) {
+//                temp = token;
+//            }
+//            if (isNumber(token)) {
+//                number = Integer.parseInt(token);
+//                addWord(temp, number);
+//            }
+//        }
     }
 
-    public static boolean isValidWord(String word){
+    public boolean isValidWord(String word){
         String allLetters = "^[a-zA-Z]+$";
         // returns true if the word is composed by only letters otherwise returns false;
         return word.matches(allLetters);
-
     }
 
-    private static boolean isNumber (String input){
+    private boolean isNumber(String input){
         String allNumbers = "^[1-9]+$";
         // returns true if the word is composed by only letters otherwise returns false;
         return input.matches(allNumbers);
     }
 
-    private static void addWord(String word, int number) {
+    private void addWord(String word, int number) {
         temporaryMap.put(word, number);
     }
 
-    private static int countFiles(File folder) {
+    private int countFiles(File folder) {
         File[] size = folder.listFiles();
         System.out.printf("files in folder: %d\n", size.length);
         return size.length;
     }
 
-    private static void probabilityContains(String word) {
-        double probHam = (double) hamWords.get(word) / (double) numHamFiles;
-        double probSpam = (double) spamWords.get(word) / (double) numSpamFiles;
-        hamProb.put(word, probHam);
-        spamProb.put(word, probSpam);
+//    public void probabilityContains(String word) {
+//        double probHam = (double) trainHamFreq.get(word) / (double) numHamFiles;
+//        double probSpam = (double) trainSpamFreq.get(word) / (double) numSpamFiles;
+//        hamProb.put(word, probHam);
+//        spamProb.put(word, probSpam);
+//    }
+
+    public void probabilityWordInSpam(String word) {
+        double probabilitySpam = (double) trainSpamFreq.get(word) / (double) numSpamFiles;
+        spamProb.put(word, probabilitySpam);
     }
 
-    private static void probability(String word){
+    public void probabilityWordInHam(String word) {
+        double probabilityHam = (double) trainHamFreq.get(word) / (double) numHamFiles;
+        hamProb.put(word, probabilityHam);
+        //System.out.println(hamProb);
+    }
+
+    private void probability(String word){
         double probSW = spamProb.get(word) / (spamProb.get(word) + hamProb.get(word));
         probabilitySW.put(word, probSW);
     }
@@ -94,16 +121,17 @@ public class Probabilities {
         System.out.println("I really hope this works.");
         try {
             probabilities.parseFile(hamFile1);
+            //System.out.println("Display Temporary Map: " + probabilities.temporaryMap);
 
+            System.out.println("Displaying probability: " + probabilities.hamProb);
 
             System.out.println("Counting...");
-            numHamFiles = countFiles(hamFolder);
-        } catch(FileNotFoundException e){
+            probabilities.numHamFiles = probabilities.countFiles(hamFolder);
+        } catch(FileNotFoundException e) {
             System.err.println("Invalid input dir: " + hamFile1.getAbsolutePath());
             e.printStackTrace();
-        }catch(IOException e){
+        }catch(IOException e) {
             e.printStackTrace();
         }
-
     }
 }

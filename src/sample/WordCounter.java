@@ -45,7 +45,6 @@ public class WordCounter {
         String allLetters = "^[a-zA-Z]+$";
         // returns true if the word is composed by only letters otherwise returns false;
         return word.matches(allLetters);
-
     }
 
     private void countWord(String word){
@@ -78,13 +77,11 @@ public class WordCounter {
                         fileOutput.println(key + ", " + count);
                     }
                 }
-
                 fileOutput.close();
             }
         }else{
             System.out.println("Error: the output file already exists: " + output.getAbsolutePath());
         }
-
     }
 
     //main method
