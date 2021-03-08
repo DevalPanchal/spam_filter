@@ -8,6 +8,7 @@
 <GridPane fx:controller="sample.Controller"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
 
+    <Button fx:id="trainDataBtn" id="trainDataBtn" onAction="#TrainData" GridPane.rowIndex="1" GridPane.columnIndex="1" text="Select Training Path"></Button>
     <TableView fx:id="tableView" GridPane.columnIndex="0" GridPane.rowIndex="0">
         <columns>
             <TableColumn fx:id="fileColumn" text="File"></TableColumn>

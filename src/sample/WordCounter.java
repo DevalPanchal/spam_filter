@@ -15,7 +15,7 @@ public class WordCounter {
     private Map<String, Double> hamProbability;
     private Map<String, Double> spamProbability;
 
-    private Map<String, Double> probabilitySpamWords;
+    public Map<String, Double> probabilitySpamWords;
 
     private int numHamFiles = 0;
     private int numSpamFiles = 0;
@@ -55,7 +55,7 @@ public class WordCounter {
         }
     }
 
-    public void parseFolder(File file) throws IOException {
+    public void parseTrainingFolder(File file) throws IOException {
         String fileName = file.getPath();
         if (file.isDirectory()) {
             if (fileName.contains("ham")) {
@@ -70,7 +70,7 @@ public class WordCounter {
             } else {
                 File[] content = file.listFiles();
                 for (File current: content) {
-                    parseFolder(current);
+                    parseTrainingFolder(current);
                 }
             }
         }
@@ -272,8 +272,8 @@ public class WordCounter {
         WordCounter wordCounter = new WordCounter();
         System.out.println("Hello");
         try{
-            wordCounter.parseFolder(dataDir);
-            wordCounter.parseFolder(dataDir2);
+            wordCounter.parseTrainingFolder(dataDir);
+            wordCounter.parseTrainingFolder(dataDir2);
             //wordCounter.parseFile(dataDir3);
 
 //            System.out.println("Ham Frequency: " + wordCounter.trainHamFreq);
