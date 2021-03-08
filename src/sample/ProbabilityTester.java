@@ -96,15 +96,17 @@ public class ProbabilityTester {
         if (hamWords.containsKey(word) && spamWords.containsKey(word)){
 //            System.out.println("Option both");
             probHam = (double) hamWords.get(word) / (double) numHamFiles;
+//            System.out.printf("probHam = %f\n", probHam);
             probSpam = (double) spamWords.get(word) / (double) numSpamFiles;
+//            System.out.printf("probSpam = %f\n", probSpam);
         } else if (!hamWords.containsKey(word)){
-//            System.out.println("Option ham");
-            probSpam = 100.0;
+//            System.out.println("Option spam");
+            probSpam = (double) spamWords.get(word) / (double) numSpamFiles;
             probHam = 0.0;
         } else if (!spamWords.containsKey(word)) {
-//            System.out.println("Option spam");
+//            System.out.println("Option ham");
             probSpam = 0.0;
-            probHam = 100.0;
+            probHam = (double) hamWords.get(word) / (double) numHamFiles;
         }
         hamProb.put(word, probHam);
         spamProb.put(word, probSpam);
@@ -112,7 +114,10 @@ public class ProbabilityTester {
 
     private static double probabilityMap(String word){
         probabilityContains(word);
+//        System.out.printf("hamProb = %f\n", hamProb.get(word));
+//        System.out.printf("spamProb = %f\n", spamProb.get(word));
         double probSW = spamProb.get(word) / (spamProb.get(word) + hamProb.get(word));
+//        System.out.printf("probSW = %f/(%f + %f) = %f\n", spamProb.get(word), spamProb.get(word), hamProb.get(word), probSW);
         probabilitySW.put(word, probSW);
         return probSW;
     }
@@ -122,11 +127,12 @@ public class ProbabilityTester {
 //        for (Map.Entry<String, Double> word : probabilitySW.entrySet()){
 //            result += Math.log(1-word.getValue())-Math.log(word.getValue());
 //        }
-        for (int i = 0; i < N; i++){
+        for (int i = 1; i < N; i++){
             double wordProb = probabilityMap(wordList.get(i));
             result += Math.log(1-wordProb)-Math.log(wordProb);
         }
-        return 1 / (1 + Math.exp(result));
+        System.out.println(result);
+        return 1 / (1 + Math.pow(Math.E, result));
     }
 
 
@@ -169,6 +175,8 @@ public class ProbabilityTester {
             e.printStackTrace();
         }
 
+        System.out.println("ProbabilitySW");
+        System.out.println(probabilitySW);
         System.out.println("Calculating summation");
         int n = wordList.size();
         System.out.println(summation(n));
