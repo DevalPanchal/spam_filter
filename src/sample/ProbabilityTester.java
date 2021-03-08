@@ -73,7 +73,6 @@ public class ProbabilityTester {
 //    }
 
     private static void addWord(String word, int number){
-        System.out.printf("String %s, Integer %d\n", word, number);
         temporaryMap.put(word, number);
     }
 
@@ -95,15 +94,15 @@ public class ProbabilityTester {
         double probSpam = 0.0;
 
         if (hamWords.containsKey(word) && spamWords.containsKey(word)){
-            System.out.println("Option both");
+//            System.out.println("Option both");
             probHam = (double) hamWords.get(word) / (double) numHamFiles;
             probSpam = (double) spamWords.get(word) / (double) numSpamFiles;
         } else if (!hamWords.containsKey(word)){
-            System.out.println("Option ham");
+//            System.out.println("Option ham");
             probSpam = 100.0;
             probHam = 0.0;
         } else if (!spamWords.containsKey(word)) {
-            System.out.println("Option spam");
+//            System.out.println("Option spam");
             probSpam = 0.0;
             probHam = 100.0;
         }
@@ -132,6 +131,7 @@ public class ProbabilityTester {
 
 
     public static void main(String[] args){
+        ProbabilityTester pt = new ProbabilityTester();
         System.out.println("Starting Probability Tester");
         WordCounter wc = new WordCounter();
         try {
@@ -149,14 +149,14 @@ public class ProbabilityTester {
             System.out.println("Parsing ham");
             parseCSV(ham);
             System.out.println("Copying ham");
-            System.out.println(temporaryMap);
             hamWords.putAll(temporaryMap);
             temporaryMap.clear();
+//            System.out.println(hamWords);
             System.out.println("Parsing spam");
             parseCSV(spam);
             System.out.println("Copying spam");
             spamWords.putAll(temporaryMap);
-
+//            System.out.println(spamWords);
             // Count the files in each test folder
             System.out.println("Counting");
             numHamFiles = countFiles(hamFolder);
@@ -169,6 +169,7 @@ public class ProbabilityTester {
             e.printStackTrace();
         }
 
+        System.out.println("Calculating summation");
         int n = wordList.size();
         System.out.println(summation(n));
     }
