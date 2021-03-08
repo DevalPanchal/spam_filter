@@ -81,11 +81,20 @@ public class WordCounter {
         File[] content = file.listFiles();
 
         for(File current: content) {
+            Map<String, Integer> temporaryMap = new TreeMap<String, Integer>();
             Scanner scan = new Scanner(current);
             while(scan.hasNext()) {
                 String token = scan.next();
                 if (isValidWord(token)) {
                     countWordHam(token);
+                }
+            }
+            for (Map.Entry<String, Integer> entry: temporaryMap.entrySet()) {
+                if (trainHamFreq.containsKey(entry.getKey())) {
+                    int previous = trainHamFreq.get(entry.getKey());
+                    trainHamFreq.put(entry.getKey(), previous + 1);
+                } else {
+                    trainHamFreq.put(entry.getKey(), 1);
                 }
             }
             probabilityWordInHam(content.length);
@@ -104,11 +113,11 @@ public class WordCounter {
                 }
             }
             for (Map.Entry<String, Integer> entry: temporaryMap.entrySet()) {
-                if (trainHamFreq.containsKey(entry.getKey())) {
-                    int previous = trainHamFreq.get(entry.getKey());
-                    trainHamFreq.put(entry.getKey(), previous + 1);
+                if (trainSpamFreq.containsKey(entry.getKey())) {
+                    int previous = trainSpamFreq.get(entry.getKey());
+                    trainSpamFreq.put(entry.getKey(), previous + 1);
                 } else {
-                    trainHamFreq.put(entry.getKey(), 1);
+                    trainSpamFreq.put(entry.getKey(), 1);
                 }
             }
             probabilityWordInSpam(content.length);
@@ -257,21 +266,21 @@ public class WordCounter {
         }
 
         File dataDir = new File(args[0]);
-        //File dataDir2 = new File(args[1]);
+        File dataDir2 = new File(args[1]);
         //File dataDir3 = new File(args[2]);
 
         WordCounter wordCounter = new WordCounter();
         System.out.println("Hello");
         try{
             wordCounter.parseFolder(dataDir);
-            //wordCounter.parseFile(dataDir2);
+            wordCounter.parseFolder(dataDir2);
             //wordCounter.parseFile(dataDir3);
 
-            System.out.println("Ham Frequency: " + wordCounter.trainHamFreq);
-            System.out.println("Spam Frequency: " + wordCounter.trainSpamFreq);
-
-            System.out.println("Ham Probability: " + wordCounter.hamProbability);
-            System.out.println("Spam Probability: " + wordCounter.spamProbability);
+//            System.out.println("Ham Frequency: " + wordCounter.trainHamFreq);
+//            System.out.println("Spam Frequency: " + wordCounter.trainSpamFreq);
+//
+//            System.out.println("Ham Probability: " + wordCounter.hamProbability);
+//            System.out.println("Spam Probability: " + wordCounter.spamProbability);
 
             wordCounter.probabiltyFileIsSpam();
             System.out.println("Probability file is spam: " + wordCounter.probabilitySpamWords);
