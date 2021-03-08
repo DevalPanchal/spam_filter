@@ -9,15 +9,17 @@
 <GridPane fx:controller="sample.Controller"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
 
-    <Button fx:id="trainDataBtn" id="trainDataBtn" onAction="#TrainData" GridPane.rowIndex="1" GridPane.columnIndex="0" text="Select Training Path"></Button>
-    <TextField fx:id="trainDataPath" id="trainDataPath" GridPane.rowIndex="1" GridPane.columnIndex="1"></TextField>
-    <Button fx:id="testDataBtn" id="testDataBtn" onAction="#TestData" GridPane.rowIndex="2" GridPane.columnIndex="0" text="Select Testing Path"></Button>
-    <TextField fx:id="testDataPath" id="testDataPath" GridPane.rowIndex="2" GridPane.columnIndex="1"></TextField>
-    <TableView fx:id="tableView" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    <Button fx:id="trainDataBtn" id="trainDataBtn" onAction="#TrainData" GridPane.rowIndex="1" GridPane.columnIndex="0" text="Select Training Path" />
+    <TextField fx:id="trainDataPath" id="trainDataPath" GridPane.rowIndex="1" GridPane.columnIndex="1" text="" />
+
+    <Button fx:id="testDataBtn" id="testDataBtn" onAction="#TestData" GridPane.rowIndex="2" GridPane.columnIndex="0" text="Select Testing Path" />
+    <TextField fx:id="testDataPath" id="testDataPath" GridPane.rowIndex="2" GridPane.columnIndex="1" text="" />
+
+    <TableView fx:id="tableView" GridPane.columnIndex="0" GridPane.rowIndex="0" minWidth="600">
         <columns>
-            <TableColumn fx:id="fileColumn" text="File"></TableColumn>
-            <TableColumn fx:id="actualClassColumn" text="Actual Class"></TableColumn>
-            <TableColumn fx:id="spamProbabilityColumn" text="Spam Probability"></TableColumn>
+            <TableColumn fx:id="fileColumn" text="File" minWidth="300"></TableColumn>
+            <TableColumn fx:id="actualClassColumn" text="Actual Class" minWidth="100"></TableColumn>
+            <TableColumn fx:id="spamProbabilityColumn" text="Spam Probability" minWidth="200"></TableColumn>
         </columns>
     </TableView>
 </GridPane>
