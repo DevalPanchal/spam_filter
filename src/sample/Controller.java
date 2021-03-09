@@ -13,6 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
+/**
+ * The purpose of Controller is to control the events triggered in the run window
+ */
 public class Controller {
     @FXML
     private TableView tableView;
@@ -36,6 +39,12 @@ public class Controller {
 
     WordCounter wordCounter = new WordCounter();
 
+    /**
+     * TrainData calls functions from WordCounter to parse the training folder and to calculate the probability
+     * a file is spam
+     * @param e - the event triggered in the run window
+     * @throws IOException
+     */
     public void TrainData(ActionEvent e) throws IOException {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File("."));
@@ -54,6 +63,12 @@ public class Controller {
         }
     }
 
+    /**
+     * TestData calls functions from WordCounter to parse the test folder and to calculate the probability
+     * a file is spam
+     * @param e - the event triggered in the run window
+     * @throws IOException
+     */
     public void TestData(ActionEvent e) throws IOException {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File("."));
@@ -77,6 +92,11 @@ public class Controller {
         }
     }
 
+    /**
+     * This function parses the test folder
+     * @param file - File the test folder
+     * @throws IOException
+     */
     public void parseTestingFolder(File file) throws IOException {
         String fileName = file.getPath();
         if (file.isDirectory()) {
