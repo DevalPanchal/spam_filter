@@ -24,6 +24,14 @@ TLDR:
 
 **Note**: This project runs on Java 12, if you have a new version you can manually change the settings in the module settings
 and set it to the Java version that you are using. 
+
+This is an example output of the project:
+![Output Example](image.PNG)
+
+This is an example of the project after training the data first and testing the trained dataset (the empty text fields 
+select training/testing path buttons are filled with your absolute path to that location):
+![Output Example2](testOutput.PNG)
+
 ****
 
 ### Technologies Used:
