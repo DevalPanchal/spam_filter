@@ -8,13 +8,23 @@ The improvements made to this project were that of the interface, mainly the col
 UX (user interface) was enhanced using css.
 
 ### Run this Project:
-Pre-requistes: You must have java 12, intellij IDE, and javafx installed on your computer.<br />
+Prerequistes: You must have java 12, intellij IDE, and javafx installed on your computer.<br /><br />
 To run this project on your local machine git clone this repository by either using git command `git clone`, or
 download the zip file and extract to a desired location on your machine. After this project is on your machine
 run the main file and the user will be prompt to select a train Folder and test Folder. First select 
 the train Folder to train the dataset, the folder which you will select will be `data/train`. After the data has 
 been trained select the test folder button, and the folder which you will select will be `data/test`. The program will
-then run, populating the table with the file, and the probability that the file is spam. 
+then run, populating the table with the file, and the probability that the file is spam. <br/> <br />
+
+TLDR: 
+1. `git clone` or download zip
+2. select run button (to run main) on top left of IDE (intellij)
+3. select `select train folder` button and select folder `data/train`
+4. select `select test folder` button and select folder `data/test`
+
+**Note**: This project runs on Java 12, if you have a new version you can manually change the settings in the module settings
+and set it to the Java version that you are using. 
+****
 
 ### Technologies Used:
 The technologies used in this project were:
