@@ -48,6 +48,7 @@ public class Controller {
     public void TrainData(ActionEvent e) throws IOException {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File("."));
+        // method received from stackoverflow
         File mainDirectory = directoryChooser.showDialog(null);
 
         String path = mainDirectory.getAbsolutePath();
@@ -72,6 +73,7 @@ public class Controller {
     public void TestData(ActionEvent e) throws IOException {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File("."));
+        // method received from stackoverflow
         File mainDirectory = directoryChooser.showDialog(null);
         String path = mainDirectory.getAbsolutePath();
         testDataPath.setText(path);
@@ -93,7 +95,8 @@ public class Controller {
     }
 
     /**
-     * This function parses the test folder
+     * This function parses the test folder and adds the rows of each file, calculating the spam
+     * probability of each of the files
      * @param file - File the test folder
      * @throws IOException
      */

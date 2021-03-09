@@ -32,6 +32,9 @@ This is an example of the project after training the data first and testing the 
 select training/testing path buttons are filled with your absolute path to that location):
 ![Output Example2](testOutput.PNG)
 
+(Note: The current output is incorrect and displays incorrect output, the purpose of this assignment was
+to train the dataset using the train folder and the use the test folder to achieve the accuracy and precision of
+this the probability. Currently a function is not calculating properly the probability and thus giving false output.)
 ****
 
 ### Technologies Used:
@@ -44,4 +47,6 @@ The technologies used in this project were:
 Resources used for this project were:
 1. [Looping Through Map](https://www.geeksforgeeks.org/how-to-iterate-over-a-treemap-in-java/)
 2. [Parsing CSV](https://www.javatpoint.com/how-to-read-csv-file-in-java) (implemented in Branch `prototype` and later deprecated)
-3. WordCounter example from Professor Mariana S.
+3. [Using Directory Chooser in Controller](https://stackoverflow.com/questions/25491732/how-do-i-open-the-javafx-filechooser-from-a-controller-class)
+4. [JavaFx FXML CSS](https://www.callicoder.com/javafx-css-tutorial/)
+5. WordCounter example from Professor Mariana S.

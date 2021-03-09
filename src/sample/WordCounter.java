@@ -195,24 +195,29 @@ public class WordCounter {
         double N = 0.0;
 
         Scanner scan = new Scanner(file);
+        // giving an output of 0.5 for each file and the precision is NaN
+//        if (file.isDirectory()) {
+//
+//        }
+        // go through each file starting at the first file and add to N the probability that the file is spam
         while(scan.hasNext()) {
             String token = scan.next();
             if (isValidWord(token)) {
-                if (probabilitySpamWords.containsKey(token)) {
-                    N += probabilitySummation(token);
-                }
+                N += probabilitySummation(token);
             }
         }
         probability = 1 / (1 + Math.pow(Math.E, N));
-
+        numFiles++;
+        // if the probability of the ham file is greater than the threshold of 0.5 then it is a false positive (a spam file in the ham folder)
         if (fileName.contains("ham") && probability > DETECTOR_THRESHOLD) {
             numFalsePositives++;
+            // if the probability of the spam file is greater than the threshold of 0.5 then it is a true positive (an actual spam file)
         } else if (fileName.contains("spam") && probability > DETECTOR_THRESHOLD) {
             numTruePositives++;
+            // if the probability of the ham file is less than the threshold of 0.5 then it is a true negative (an actual ham file)
         } else if (fileName.contains("ham") && probability < DETECTOR_THRESHOLD) {
             numTrueNegatives++;
         }
-        numFiles++;
         return probability;
     }
 
@@ -222,7 +227,10 @@ public class WordCounter {
      * @return double result of the calculation
      */
     public double probabilitySummation(String word) {
-        double result = Math.log(1 - probabilitySpamWords.get(word) - Math.log(probabilitySpamWords.get(word)));
+        double result = 0.0;
+        if (probabilitySpamWords.containsKey(word)) {
+            result += Math.log(1 - probabilitySpamWords.get(word) - Math.log(probabilitySpamWords.get(word)));
+        }
         return result;
     }
 
