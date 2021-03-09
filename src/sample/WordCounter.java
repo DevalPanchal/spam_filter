@@ -25,6 +25,10 @@ public class WordCounter {
     public double numTrueNegatives = 0.0;
     public double numFalsePositives = 0.0;
 
+    /**
+     * Constructor
+     * This function initiates the maps as tree maps
+     */
     public WordCounter() {
         trainHamFreq = new TreeMap<>();
         trainSpamFreq = new TreeMap<>();
@@ -33,33 +37,11 @@ public class WordCounter {
         probabilitySpamWords = new TreeMap<>();
     }
 
-//    public void parseFile(File file) throws IOException {
-//        //System.out.println("Starting parsing the file: " + file.getAbsolutePath());
-//        String fileName = file.getPath();
-//        if(file.isDirectory()){
-//            //parse each file inside the directory
-//            File[] content = file.listFiles();
-//            for(File current: content){
-//                parseFile(current);
-//            }
-//        }else{
-//            Scanner scanner = new Scanner(file);
-//            // scanning token by token
-//            while (scanner.hasNext()) {
-//                String token = scanner.next();
-//                if (isValidWord(token)) {
-//                    if (fileName.contains("ham")) {
-//                        hamFrequency(file);
-//                    } else if (fileName.contains("ham2")) {
-//                        hamFrequency(file);
-//                    } else if (fileName.contains("spam")) {
-//                        spamFrequency(file);
-//                    }
-//                }
-//            }
-//        }
-//    }
-
+    /**
+     * This function opens the files contained within the train folder
+     * @param file - the file folder /data/train
+     * @throws IOException
+     */
     public void parseTrainingFolder(File file) throws IOException {
         String fileName = file.getPath();
         if (file.isDirectory()) {
@@ -80,23 +62,11 @@ public class WordCounter {
         }
     }
 
-//    public void parseTestingFolder(File file) throws IOException {
-//        String fileName = file.getPath();
-//        if (file.isDirectory()) {
-//            File[] content = file.listFiles();
-//            for (File current: content) {
-//                parseTestingFolder(file);
-//            }
-//        } else {
-//            double probabilitySpam = 0.0;
-//            try {
-//                probabilitySpam = probabilitySpamFile(file);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
+    /**
+     * This function scans each file within the ham folder and counts the frequency of the word
+     * @param file - ham file
+     * @throws IOException
+     */
     public void hamFrequency(File file) throws IOException {
         File[] content = file.listFiles();
 
@@ -113,6 +83,11 @@ public class WordCounter {
         }
     }
 
+    /**
+     * his function scans each file within the spam folder and counts the frequency of the word
+     * @param file - spam file
+     * @throws IOException
+     */
     public void spamFrequency(File file) throws IOException {
         File[] content = file.listFiles();
         for (File current: content) {
@@ -128,13 +103,11 @@ public class WordCounter {
         }
     }
 
-//    public void containsWord(Map<String, Integer> temp, String word) {
-//        if (!temp.containsKey(word)) {
-//            temp.put(word, 1);
-//        }
-//    }
-
-    // Pr(Wi|H)
+    /**
+     * This function calculates the formula Pr(Wi|H)
+     * number of ham files containing word_i / number of ham files
+     * @param numFiles - number of ham files
+     */
     public void probabilityWordInHam(double numFiles) {
         for (Map.Entry<String, Integer> entry: trainHamFreq.entrySet()) {
             double probability = (double) entry.getValue() / numFiles;
@@ -142,7 +115,10 @@ public class WordCounter {
         }
     }
 
-    // count the words in ham folder
+    /**
+     * This function counts the words in the ham folder
+     * @param word - the key is a string "word"
+     */
     public void countWordHam(String word) {
         if (trainHamFreq.containsKey(word)) {
             int previous = trainHamFreq.get(word);
@@ -152,18 +128,12 @@ public class WordCounter {
         }
     }
 
-    public void countWordHam2(String word, Map<String, Integer> temp) {
-        for (Map.Entry<String, Integer> entry: temp.entrySet()) {
-            if (trainHamFreq.containsKey(word)) {
-                int previous = trainHamFreq.get(word);
-                trainHamFreq.put(word, previous + 1);
-            } else {
-                trainHamFreq.put(word, 1);
-            }
-        }
-    }
-
     // Pr(Wi|S)
+    /**
+     * This function calculates the formula Pr(Wi|S)
+     * number of spam files containing word_i / number of spam files
+     * @param numFiles - number of spam files
+     */
     public void probabilityWordInSpam(double numFiles) {
         for (Map.Entry<String, Integer> entry: trainSpamFreq.entrySet()) {
             double probability = (double) entry.getValue() / numFiles;
@@ -171,7 +141,10 @@ public class WordCounter {
         }
     }
 
-    // Pr(S|Wi)
+    /**
+     * This function calculates Pr(S|Wi)
+     * Pr(Wi|S) / (Pr(Wi|S) + Pr(Wi|H))
+     */
     public void probabiltyFileIsSpam() {
         for (Map.Entry<String, Double> entry: spamProbability.entrySet()) {
             if (hamProbability.containsKey(entry.getKey())) {
@@ -181,7 +154,10 @@ public class WordCounter {
         }
     }
 
-    // Count the words in spam folder
+    /**
+     * This function counts the words in the spam folder
+     * @param word - key is a string "word"
+     */
     public void countWordSpam(String word) {
         if (trainSpamFreq.containsKey(word)) {
             int previous = trainSpamFreq.get(word);
@@ -191,12 +167,23 @@ public class WordCounter {
         }
     }
 
+    /**
+     * This function uses regex to determine whether the string input is a word
+     * @param word - string input
+     * @return - boolean true if input is a word and false if not a word
+     */
     private boolean isValidWord(String word){
         String allLetters = "^[a-zA-Z]+$";
         // returns true if the word is composed by only letters otherwise returns false;
         return word.matches(allLetters);
     }
 
+    /**
+     * This function calculates the probability that a file is spam, calls probabilitySummation
+     * @param file - input File
+     * @return - double the calculated probability
+     * @throws FileNotFoundException
+     */
     public double probabilitySpamFile(File file) throws FileNotFoundException {
         String fileName = file.getPath();
         double probability = 0.0;
@@ -224,6 +211,11 @@ public class WordCounter {
         return probability;
     }
 
+    /**
+     * This function calculates 1 iteration of the summation ln(1-Pr(S|Wi))-ln(Pr(S|Wi))
+     * @param word - key string "word"
+     * @return double result of the calculation
+     */
     public double probabilitySummation(String word) {
         double result = Math.log(1 - probabilitySpamWords.get(word) - Math.log(probabilitySpamWords.get(word)));
         return result;
@@ -245,12 +237,6 @@ public class WordCounter {
             wordCounter.parseTrainingFolder(dataDir);
             wordCounter.parseTrainingFolder(dataDir2);
             //wordCounter.parseFile(dataDir3);
-
-//            System.out.println("Ham Frequency: " + wordCounter.trainHamFreq);
-//            System.out.println("Spam Frequency: " + wordCounter.trainSpamFreq);
-//
-//            System.out.println("Ham Probability: " + wordCounter.hamProbability);
-//            System.out.println("Spam Probability: " + wordCounter.spamProbability);
 
             wordCounter.probabiltyFileIsSpam();
             System.out.println("Probability file is spam: " + wordCounter.probabilitySpamWords);
