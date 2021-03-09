@@ -7,6 +7,11 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+/**
+ * The purpose of WordCounter is to calculate the probability that a file is spam. By first creating a map of word
+ * frequencies and then calculating the probability of those words being spam or ham. Then finally calculating the
+ * probability that a file is spam using the calculated probabilities.
+ */
 public class WordCounter {
 
     private Map<String, Integer> trainHamFreq;
@@ -184,7 +189,7 @@ public class WordCounter {
      * @return - double the calculated probability
      * @throws FileNotFoundException
      */
-    public double probabilitySpamFile(File file) throws FileNotFoundException {
+    public double probabilitySpamFile(File file) throws IOException {
         String fileName = file.getPath();
         double probability = 0.0;
         double N = 0.0;
