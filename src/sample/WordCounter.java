@@ -16,9 +16,9 @@ public class WordCounter {
     private Map<String, Double> spamProbability;
 
     public Map<String, Double> probabilitySpamWords;
-
-    private int numHamFiles = 0;
-    private int numSpamFiles = 0;
+    final double DETECTOR_THRESHOLD = 0.5;
+    public double accuracy;
+    public double precision;
 
     public WordCounter() {
         trainHamFreq = new TreeMap<>();
@@ -28,32 +28,32 @@ public class WordCounter {
         probabilitySpamWords = new TreeMap<>();
     }
 
-    public void parseFile(File file) throws IOException {
-        //System.out.println("Starting parsing the file: " + file.getAbsolutePath());
-        String fileName = file.getPath();
-        if(file.isDirectory()){
-            //parse each file inside the directory
-            File[] content = file.listFiles();
-            for(File current: content){
-                parseFile(current);
-            }
-        }else{
-            Scanner scanner = new Scanner(file);
-            // scanning token by token
-            while (scanner.hasNext()) {
-                String token = scanner.next();
-                if (isValidWord(token)) {
-                    if (fileName.contains("ham")) {
-                        hamFrequency(file);
-                    } else if (fileName.contains("ham2")) {
-                        hamFrequency(file);
-                    } else if (fileName.contains("spam")) {
-                        spamFrequency(file);
-                    }
-                }
-            }
-        }
-    }
+//    public void parseFile(File file) throws IOException {
+//        //System.out.println("Starting parsing the file: " + file.getAbsolutePath());
+//        String fileName = file.getPath();
+//        if(file.isDirectory()){
+//            //parse each file inside the directory
+//            File[] content = file.listFiles();
+//            for(File current: content){
+//                parseFile(current);
+//            }
+//        }else{
+//            Scanner scanner = new Scanner(file);
+//            // scanning token by token
+//            while (scanner.hasNext()) {
+//                String token = scanner.next();
+//                if (isValidWord(token)) {
+//                    if (fileName.contains("ham")) {
+//                        hamFrequency(file);
+//                    } else if (fileName.contains("ham2")) {
+//                        hamFrequency(file);
+//                    } else if (fileName.contains("spam")) {
+//                        spamFrequency(file);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     public void parseTrainingFolder(File file) throws IOException {
         String fileName = file.getPath();
@@ -62,7 +62,7 @@ public class WordCounter {
                 System.out.println("This is a ham folder");
                 hamFrequency(file);
             } else if (fileName.contains("ham2")) {
-                System.out.println("This is another ham folder");
+                System.out.println("This is a ham folder");
                 hamFrequency(file);
             } else if (fileName.contains("spam")) {
                 System.out.println("This is a spam folder");
@@ -76,40 +76,22 @@ public class WordCounter {
         }
     }
 
-    public void parseTestingFolder(File file) throws IOException {
-        String fileName = file.getPath();
-        if (file.isDirectory()) {
-            File[] content = file.listFiles();
-            for (File current: content) {
-                parseTestingFolder(file);
-            }
-        } else {
-            double probabilitySpam = 0.0;
-            try {
-                probabilitySpam = probabilitySpamFile(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public double probabilitySpamFile(File file) throws FileNotFoundException {
-        double probability = 0.0;
-        double N = 0.0;
-        double threshold = 0.5;
-
-        Scanner scan = new Scanner(file);
-        while(scan.hasNext()) {
-            String token = scan.next();
-            if (isValidWord(token)) {
-                if (probabilitySpamWords.containsKey(token)) {
-                    N += Math.log(1 - probabilitySpamWords.get(token) - Math.log(probabilitySpamWords.get(token)));
-                }
-            }
-        }
-        probability = 1 / (1 + Math.pow(Math.E, N));
-        return probability;
-    }
+//    public void parseTestingFolder(File file) throws IOException {
+//        String fileName = file.getPath();
+//        if (file.isDirectory()) {
+//            File[] content = file.listFiles();
+//            for (File current: content) {
+//                parseTestingFolder(file);
+//            }
+//        } else {
+//            double probabilitySpam = 0.0;
+//            try {
+//                probabilitySpam = probabilitySpamFile(file);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     public void hamFrequency(File file) throws IOException {
         File[] content = file.listFiles();
@@ -121,14 +103,6 @@ public class WordCounter {
                 String token = scan.next();
                 if (isValidWord(token)) {
                     countWordHam(token);
-                }
-            }
-            for (Map.Entry<String, Integer> entry: temporaryMap.entrySet()) {
-                if (trainHamFreq.containsKey(entry.getKey())) {
-                    int previous = trainHamFreq.get(entry.getKey());
-                    trainHamFreq.put(entry.getKey(), previous + 1);
-                } else {
-                    trainHamFreq.put(entry.getKey(), 1);
                 }
             }
             probabilityWordInHam(content.length);
@@ -143,26 +117,18 @@ public class WordCounter {
             while(scan.hasNext()) {
                 String token = scan.next();
                 if (isValidWord(token)) {
-                    containsWord(temporaryMap, token);
-                }
-            }
-            for (Map.Entry<String, Integer> entry: temporaryMap.entrySet()) {
-                if (trainSpamFreq.containsKey(entry.getKey())) {
-                    int previous = trainSpamFreq.get(entry.getKey());
-                    trainSpamFreq.put(entry.getKey(), previous + 1);
-                } else {
-                    trainSpamFreq.put(entry.getKey(), 1);
+                    countWordSpam(token);
                 }
             }
             probabilityWordInSpam(content.length);
         }
     }
 
-    public void containsWord(Map<String, Integer> temp, String word) {
-        if (!temp.containsKey(word)) {
-            temp.put(word, 1);
-        }
-    }
+//    public void containsWord(Map<String, Integer> temp, String word) {
+//        if (!temp.containsKey(word)) {
+//            temp.put(word, 1);
+//        }
+//    }
 
     // Pr(Wi|H)
     public void probabilityWordInHam(double numFiles) {
@@ -227,74 +193,28 @@ public class WordCounter {
         return word.matches(allLetters);
     }
 
-//    private void countWord(String word){
-//        if(wordCounts.containsKey(word)){
-//            int previous = wordCounts.get(word);
-//            wordCounts.put(word, previous+1);
-//        }else{
-//            wordCounts.put(word, 1);
-//        }
-//    }
+    // Pr(S|F)
+    public double probabilitySpamFile(File file) throws FileNotFoundException {
+        String fileName = file.getPath();
+        double probability = 0.0;
+        double N = 0.0;
 
-//    private void hamFrequency(String word) {
-//        if (trainHamFreq.containsKey(word)) {
-//            int previous = trainHamFreq.get(word);
-//            trainHamFreq.put(word, previous + 1);
-//        } else {
-//            trainHamFreq.put(word, 1);
-//        }
-//    }
-//
-//    private void spamFrequency(String word) {
-//        if (trainSpamFreq.containsKey(word)) {
-//            int previous = trainSpamFreq.get(word);
-//            trainSpamFreq.put(word, previous + 1);
-//        } else {
-//            trainSpamFreq.put(word, 1);
-//        }
-//    }
+        Scanner scan = new Scanner(file);
+        while(scan.hasNext()) {
+            String token = scan.next();
+            if (isValidWord(token)) {
+                if (probabilitySpamWords.containsKey(token)) {
+                    N += Math.log( (1 - probabilitySpamWords.get(token) - Math.log(probabilitySpamWords.get(token))) );
+                }
+            }
+        }
+        probability = 1 / (1 + Math.pow(Math.E, N));
 
-//    private void ProbabilityWordInSpam(String word, double numFiles) {
-//        double probability = (double) trainHamFreq.get(word) / numFiles;
-//        spamProbability.put(word, probability);
-//    }
-//
-//    private void ProbabilityWordInHam(String word, double numFiles) {
-//        double probability = (double) trainSpamFreq.get(word) / numFiles;
-//        hamProbability.put(word, probability);
-//    }
-
-
-
-//    public void outputWordCount(int minCount, File output) throws IOException{
-//        System.out.println("Saving word counts to file:" + output.getAbsolutePath());
-//        System.out.println("Total words:" + wordCounts.keySet().size());
-//
-//        if (!output.exists()){
-//            output.createNewFile();
-//            if (output.canWrite()){
-//                PrintWriter fileOutput = new PrintWriter(output);
-//
-//                Set<String> keys = wordCounts.keySet();
-//                Iterator<String> keyIterator = keys.iterator();
-//
-//                while(keyIterator.hasNext()){
-//                    String key = keyIterator.next();
-//                    int count = wordCounts.get(key);
-//                    // testing minimum number of occurances
-//                    if(count>=minCount){
-//                        fileOutput.println(key + ", " + count);
-//                    }
-//                }
-//                fileOutput.close();
-//            }
-//        }else{
-//            System.out.println("Error: the output file already exists: " + output.getAbsolutePath());
-//        }
-//    }
+        return probability;
+    }
 
     public static void main(String[] args) {
-        if(args.length < 1){
+        if(args.length < 2){
             System.err.println("Usage: java WordCounter <inputDir> <inputDir2>");
             System.exit(0);
         }
@@ -305,7 +225,7 @@ public class WordCounter {
 
         WordCounter wordCounter = new WordCounter();
         System.out.println("Hello");
-        try{
+        try {
             wordCounter.parseTrainingFolder(dataDir);
             wordCounter.parseTrainingFolder(dataDir2);
             //wordCounter.parseFile(dataDir3);
