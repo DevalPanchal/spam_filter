@@ -49,6 +49,23 @@ public class WordCounter {
      */
     public void parseTrainingFolder(File file) throws IOException {
         String fileName = file.getPath();
+//        if (file.isDirectory()) {
+//            File[] content = file.listFiles();
+//            for (File current: content) {
+//                parseTrainingFolder(current);
+//            }
+//        } else {
+//            if (fileName.contains("ham")) {
+//                System.out.println("This is a ham folder");
+//                hamFrequency(file);
+//            } else if (fileName.contains("ham2")) {
+//                System.out.println("This is a ham folder");
+//                hamFrequency(file);
+//            } else if (fileName.contains("spam")) {
+//                System.out.println("This is a spam folder");
+//                spamFrequency(file);
+//            }
+//        }
         if (file.isDirectory()) {
             if (fileName.contains("ham")) {
                 System.out.println("This is a ham folder");
@@ -67,6 +84,8 @@ public class WordCounter {
         }
     }
 
+
+
     /**
      * This function scans each file within the ham folder and counts the frequency of the word
      * @param file - ham file
@@ -76,7 +95,6 @@ public class WordCounter {
         File[] content = file.listFiles();
 
         for(File current: content) {
-            Map<String, Integer> temporaryMap = new TreeMap<String, Integer>();
             Scanner scan = new Scanner(current);
             while(scan.hasNext()) {
                 String token = scan.next();
@@ -96,7 +114,6 @@ public class WordCounter {
     public void spamFrequency(File file) throws IOException {
         File[] content = file.listFiles();
         for (File current: content) {
-            Map<String, Integer> temporaryMap = new TreeMap<String, Integer>();
             Scanner scan = new Scanner(current);
             while(scan.hasNext()) {
                 String token = scan.next();
