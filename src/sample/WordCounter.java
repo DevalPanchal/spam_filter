@@ -42,6 +42,31 @@ public class WordCounter {
         probabilitySpamWords = new TreeMap<>();
     }
 
+    // return trainHamFreq treemap
+    public Map<String, Integer> getTrainHamFreq() {
+        return this.trainHamFreq;
+    }
+
+    // return trainSpamFreq treemap
+    public Map<String, Integer> getTrainSpamFreq() {
+        return this.trainSpamFreq;
+    }
+
+    // return hamProbability treemap
+    public Map<String, Double> getHamProbability() {
+        return this.hamProbability;
+    }
+
+    // return spamProbability treemap
+    public Map<String, Double> getSpamProbability() {
+        return this.spamProbability;
+    }
+
+    // return probability that word is spam (probabilitySpamWords) map
+    public Map<String, Double> getProbabilitySpamWords() {
+        return this.probabilitySpamWords;
+    }
+
     /**
      * This function opens the files contained within the train folder
      * @param file - the file folder /data/train
